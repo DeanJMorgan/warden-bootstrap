@@ -17,6 +17,9 @@ assertDockerRunning
 ## change into the project directory
 cd "${WARDEN_ENV_PATH}"
 
+## Re-source .env to load in custom variables
+source .env
+
 ## configure command defaults
 WARDEN_WEB_ROOT="$(echo "${WARDEN_WEB_ROOT:-/}" | sed 's#^/#./#')"
 REQUIRED_FILES=("${WARDEN_WEB_ROOT}/auth.json")
