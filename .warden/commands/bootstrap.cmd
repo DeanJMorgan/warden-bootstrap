@@ -168,15 +168,11 @@ warden shell -c "while ! nc -z db 3306 </dev/null; do sleep 2; done"
 
 if [[ ${CLEAN_INSTALL} ]] && [[ ! -f "${WARDEN_WEB_ROOT}/composer.json" ]]; then
   :: Installing meta-package
-  warden env exec -T php-fpm composer create-project -q --no-interaction --prefer-dist --no-install \
-      --repository-url=https://repo.magento.com/ "${META_PACKAGE}" /tmp/create-project "${META_VERSION}"
-  warden env exec -T php-fpm rsync -a /tmp/create-project/ /var/www/html/
+  warden env exec -T php-fpm composer create-project --repository-url=https://repo.magento.com/ \
+      "${META_PACKAGE}" /tmp/"${WARDEN_ENV_NAME}" "${META_VERSION}"
+  warden shell -c "rsync -a /tmp/${WARDEN_ENV_NAME}/ /var/www/html/"
+  warden shell -c "rm -rf /tmp/${WARDEN_ENV_NAME}/"
 fi
-
-:: Installing dependencies
-warden env exec -T php-fpm bash \
-  -c '[[ $(composer -V | cut -d\  -f3 | cut -d. -f1) == 2 ]] || composer global require hirak/prestissimo'
-warden env exec -T php-fpm composer install
 
 ## import database only if --skip-db-import is not specified
 if [[ ${DB_IMPORT} ]]; then
@@ -246,6 +242,9 @@ elif [[ ${CLEAN_INSTALL} ]]; then
 fi
 
 if [[ ! ${CLEAN_INSTALL} ]]; then
+  :: Installing dependencies
+  warden env exec -T php-fpm composer install
+
   :: Configuring application
   warden env exec -T php-fpm ln -fsn env.php.warden.php app/etc/env.php
   warden env exec -T php-fpm bin/magento cache:flush -q
@@ -256,7 +255,6 @@ if [[ ! ${CLEAN_INSTALL} ]]; then
 
   :: bin/magento setup:db-data:upgrade
   warden env exec -T php-fpm php -d memory_limit=-1 bin/magento setup:db-data:upgrade
-
 fi
 
 :: Flushing cache
