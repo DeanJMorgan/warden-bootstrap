@@ -188,8 +188,7 @@ elif [[ ${CLEAN_INSTALL} ]]; then
     INSTALL_FLAGS="${INSTALL_FLAGS} --amqp-host=rabbitmq
       --amqp-port=5672
       --amqp-user=guest 
-      --amqp-password=guest 
-      --consumers-wait-for-messages=0 "
+      --amqp-password=guest "
   fi
   
   ## redis
@@ -215,6 +214,12 @@ elif [[ ${CLEAN_INSTALL} ]]; then
   fi
 
   INSTALL_FLAGS="${INSTALL_FLAGS} \
+    --search-engine=opensearch \
+    --opensearch-host=opensearch \
+    --opensearch-port=9200 \
+    --opensearch-index-prefix=magento2 \
+    --opensearch-enable-auth=0 \
+    --opensearch-timeout=15 \
     --cleanup-database \
     --backend-frontname=backend \
     --db-host=db \
