@@ -219,16 +219,9 @@ fi
 warden env exec -T php-fpm bin/magento cache:flush
 warden env exec -T php-fpm bin/magento cache:disable block_html full_page
 
-:: Creating admin user
-ADMIN_PASS=$(warden env exec -T php-fpm pwgen -n1 16)
-ADMIN_USER=localadmin
-
-warden env exec -T php-fpm bin/magento admin:user:create \
-    --admin-password="${ADMIN_PASS}" \
-    --admin-user="${ADMIN_USER}" \
-    --admin-firstname="Local" \
-    --admin-lastname="Admin" \
-    --admin-email="${ADMIN_USER}@example.com"
+ADMIN_USER="admin"
+ADMIN_PASS="adminpass12345"
+warden create-admin-user -u ${ADMIN_USER} -p ${ADMIN_PASS}
 
 :: Initialization complete
 function print_install_info {
