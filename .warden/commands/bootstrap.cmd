@@ -3,8 +3,9 @@
 set -euo pipefail
 
 function :: {
-  echo
-  echo "==> [$(date +%H:%M:%S)] $@"
+  CYAN='\033[0;36m'
+  NC='\033[0m'
+  echo -e "### [$(date +%H:%M:%S)] ${CYAN}$@${NC}"
 }
 
 ## load configuration needed for setup
