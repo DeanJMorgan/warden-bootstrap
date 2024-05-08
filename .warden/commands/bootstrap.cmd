@@ -37,7 +37,6 @@ URL_ADMIN="https://${TRAEFIK_SUBDOMAIN}.${TRAEFIK_DOMAIN}/backend/"
 while (( "$#" )); do
     case "$1" in
         --clean-install)
-            REQUIRED_FILES+=("${WARDEN_WEB_ROOT}/app/etc/env.php.init.php")
             CLEAN_INSTALL=1
             DB_IMPORT=
             shift
@@ -81,7 +80,6 @@ done
 ## if no composer.json is present in web root imply --clean-install flag when not specified explicitly
 if [[ ! ${CLEAN_INSTALL} ]] && [[ ! -f "${WARDEN_WEB_ROOT}/composer.json" ]]; then
   warning "Implying --clean-install since file ${WARDEN_WEB_ROOT}/composer.json not present"
-  REQUIRED_FILES+=("${WARDEN_WEB_ROOT}/app/etc/env.php.init.php")
   CLEAN_INSTALL=1
   DB_IMPORT=
 fi
@@ -229,9 +227,7 @@ elif [[ ${CLEAN_INSTALL} ]]; then
     --db-password=magento"
 
   :: Installing application
-  warden env exec -- -T php-fpm rm -vf app/etc/config.php app/etc/env.php app/etc/env.php.warden.php
-  warden env exec -- -T php-fpm cp app/etc/env.php.init.php app/etc/env.php
-  warden env exec -- -T php-fpm bin/magento setup:install $(echo ${INSTALL_FLAGS})
+  warden env exec -T php-fpm bin/magento setup:install $(echo ${INSTALL_FLAGS})
 
   :: Configuring application
   warden env exec -T php-fpm cp -n app/etc/env.php app/etc/env.php.warden.php
