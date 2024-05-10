@@ -1,10 +1,10 @@
-<PROJECT_NAME> Magento 2 Application
+Warden Bootstrap Template
 ========================================================
 
 | Env | FrontURL | AdminURL |
 | --- | :------- | :------- |
 | DEV | https://app.exampleproject.test/  | https://app.exampleproject.test/backend/  |
-| STG | https://stage.exampleproject.com/ | https://stage.exampleproject.com/backend/ |
+| STG | https://uat.exampleproject.com/ | https://uat.exampleproject.com/backend/ |
 | PRD | https://www.exampleproject.com/   | https://www.exampleproject.com/backend/   |
 
 Other useful URLs on DEV:
