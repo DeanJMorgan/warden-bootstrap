@@ -23,7 +23,7 @@ source .env
 ## configure command defaults
 WARDEN_WEB_ROOT="$(echo "${WARDEN_WEB_ROOT:-/}" | sed 's#^/#./#')"
 REQUIRED_FILES=("${WARDEN_WEB_ROOT}/auth.json")
-DB_DUMP="${DB_DUMP:-./backfill/magento-db.sql.gz}"
+DB_DUMP="${DB_DUMP:-./.warden/database/magento-db.sql.gz}"
 DB_IMPORT=1
 CLEAN_INSTALL=
 AUTO_PULL=1
@@ -177,7 +177,7 @@ fi
 ## import database only if --skip-db-import is not specified
 if [[ ${DB_IMPORT} ]]; then
   :: Importing database
-  warden db connect -e 'drop database magento; create database magento;'
+  ## warden db connect -e 'drop database magento; create database magento;'
   pv "${DB_DUMP}" | gunzip -c | warden db import
 elif [[ ${CLEAN_INSTALL} ]]; then
   
